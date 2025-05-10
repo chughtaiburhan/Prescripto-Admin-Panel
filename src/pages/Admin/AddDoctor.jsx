@@ -43,7 +43,7 @@ const AddDoctor = () => {
       formData.append("about", about);
 
       const { data } = await axios.post(
-        `${backendUrl}admin/add-doctor`,
+        `${backendUrl}/admin/add-doctor`,
         formData,
         {
           headers: { aToken },

@@ -26,7 +26,7 @@ const AdminContextProvider = ({ children }) => {
   const getAllDoctors = async () => {
     try {
       const { data } = await axios.post(
-        `${backendUrl}admin/all-doctor`,
+        `${backendUrl}/admin/all-doctor`,
         {},
         { headers: { aToken } }
       );
@@ -43,7 +43,7 @@ const AdminContextProvider = ({ children }) => {
   const changeAvailiblity = async (docId) => {
     try {
       const { data } = await axios.post(
-        `${backendUrl}admin/change-availiblity`,
+        `${backendUrl}/admin/change-availiblity`,
         { docId },
         { headers: { aToken } }
       );
@@ -60,7 +60,7 @@ const AdminContextProvider = ({ children }) => {
 
   const getAllAppointment = async () => {
     try {
-      const { data } = await axios.get(`${backendUrl}admin/appointment-list`, {
+      const { data } = await axios.get(`${backendUrl}/admin/appointment-list`, {
         headers: { aToken },
       });
       if (data.success) {
@@ -75,7 +75,7 @@ const AdminContextProvider = ({ children }) => {
 
   const getDashboardStats = async () => {
     try {
-      const { data } = await axios.get(`${backendUrl}admin/dashboard-stats`, {
+      const { data } = await axios.get(`${backendUrl}/admin/dashboard-stats`, {
         headers: { aToken },
       });
 
