@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 export const AdminContext = createContext(null); // Initialize with null or a default value
@@ -58,20 +58,20 @@ const AdminContextProvider = ({ children }) => {
     }
   };
 
-  const getAllAppointment = async () => {
-    try {
-      const { data } = await axios.get(`${backendUrl}/admin/appointment-list`, {
-        headers: { aToken },
-      });
-      if (data.success) {
-        setAppointment(data.appointment);
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
+  const getAllAppointment = useCallback(async () => {
+  try {
+    const { data } = await axios.get(`${backendUrl}/admin/appointment-list`, {
+      headers: { aToken },
+    });
+    if (data.success) {
+      setAppointment(data.appointment);
+    } else {
+      toast.error(data.message);
     }
-  };
+  } catch (error) {
+    toast.error(error.message);
+  }
+  }, [aToken, backendUrl]); // 👈 dependency list
 
   const getDashboardStats = async () => {
     try {

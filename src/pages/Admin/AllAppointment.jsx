@@ -6,11 +6,11 @@ const AllAppointment = () => {
   const { aToken, appointment, getAllAppointment } = useContext(AdminContext);
   const { calculateAge } = useContext(AppContext);
 
-  useEffect(() => {
-    if (aToken) {
-      getAllAppointment();
-    }
-  }, [aToken, getAllAppointment]);
+ useEffect(() => {
+  if (aToken) {
+    getAllAppointment();
+  }
+}, [aToken, getAllAppointment]); // ✅ Now this is safe
 
   return (
     <div className="w-full max-w-6xl m-5">
