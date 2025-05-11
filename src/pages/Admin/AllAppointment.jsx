@@ -103,13 +103,12 @@ const AllAppointment = () => {
         key={appointment._id || `${index}-fallback-key`}
         className="grid grid-cols-1 sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] gap-4 items-center p-6 border-b bg-white shadow-sm hover:shadow-lg transition-all duration-200"
       >
-        <div className="hidden sm:block text-gray-500 font-semibold">{index + 1}</div>
+        <div className="hidden sm:block text-gray-500 font-semibold">{index + 1}</div> 
         <div>
           <p className="font-medium text-gray-900">{user?.name || 'Unknown'}</p>
-          <p className="sm:hidden text-xs text-gray-500">
-            Age: {user?.dob ? calculateAge(user.dob) : 'N/A'}
-          </p>
+           <p className="text-sm text-gray-600">{user?.email || 'No email'}</p>
         </div>
+        
         <div className="hidden sm:block text-sm text-gray-600">
           {user?.dob ? calculateAge(user.dob) : 'N/A'}
         </div>
