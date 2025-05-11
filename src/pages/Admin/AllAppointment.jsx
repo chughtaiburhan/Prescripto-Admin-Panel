@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AdminContext } from "../../context/AdminContext";
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
+import Skeleton from "react-loading-skeleton";
 
+// Status Badge Component
 const StatusBadge = ({ status }) => {
   const statusStyles = {
     cancelled: 'bg-red-100 text-red-800',
@@ -10,11 +10,13 @@ const StatusBadge = ({ status }) => {
     upcoming: 'bg-yellow-100 text-yellow-800',
   };
 
+  const validStatus = status && statusStyles[status] ? status : 'upcoming';
+
   return (
     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-      statusStyles[status] || 'bg-gray-100 text-gray-800'
+      statusStyles[validStatus] || 'bg-gray-100 text-gray-800'
     }`}>
-      {status?.charAt(0).toUpperCase() + status?.slice(1)}
+      {validStatus.charAt(0).toUpperCase() + validStatus.slice(1)}
     </span>
   );
 };
@@ -54,51 +56,7 @@ const AllAppointment = () => {
     };
   }, [getAllAppointment, hasFetchedOnce]);
 
-  const renderAppointmentRow = (appointment, index) => {
-    const user = appointment.userId;
-    const doctor = appointment.docId;
-
-    return (
-      <div
-        key={appointment._id}
-        className="grid grid-cols-1 sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] gap-4 items-center p-6 border-b bg-white shadow-sm hover:shadow-lg transition-all duration-200"
-      >
-        <div className="hidden sm:block text-gray-500 font-semibold">{index + 1}</div>
-        <div>
-          <p className="font-medium text-gray-900">{user?.name || 'Unknown'}</p>
-          <p className="sm:hidden text-xs text-gray-500">
-            Age: {user?.dob ? calculateAge(user.dob) : 'N/A'}
-          </p>
-        </div>
-        <div className="hidden sm:block text-sm text-gray-600">
-          {user?.dob ? calculateAge(user.dob) : 'N/A'}
-        </div>
-        <div className="text-gray-600">
-          <p className="font-medium">{appointment.slotDate}</p>
-          <p className="text-xs text-gray-500">{appointment.slotTime}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <img
-            className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm hidden sm:block"
-            src={doctor?.image || '/default-doctor.png'}
-            alt={doctor?.name}
-            loading="lazy"
-            onError={(e) => (e.target.src = '/default-doctor.png')}
-          />
-          <div>
-            <p className="font-medium text-gray-900">{doctor?.name || 'Unknown Doctor'}</p>
-            <p className="text-xs text-gray-500">{doctor?.speciality || 'Speciality Unknown'}</p>
-          </div>
-        </div>
-        <div className="font-medium text-gray-900">${appointment.amount || '0.00'}</div>
-        <StatusBadge status={
-          appointment.cancelled ? 'cancelled' :
-          appointment.isCompleted ? 'completed' : 'upcoming'
-        } />
-      </div>
-    );
-  };
-
+  // Render loading skeleton row
   const renderSkeletonRow = () => (
     <div className="grid grid-cols-1 sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] gap-4 items-center p-6 border-b bg-white">
       <div className="hidden sm:block"><Skeleton height={20} width={30} /></div>
@@ -123,11 +81,69 @@ const AllAppointment = () => {
     </div>
   );
 
+  // Render a single appointment row
+  const renderAppointmentRow = (appointment, index) => {
+    const user = appointment.userId;
+    const doctor = appointment.docId;
+
+    const status = appointment.cancelled
+      ? 'cancelled'
+      : appointment.isCompleted
+      ? 'completed'
+      : 'upcoming';
+
+    const slotDate = appointment.slotDate || 'Date Not Available';
+    const slotTime = appointment.slotTime || 'Time Not Available';
+
+    const rawAmount = Number(appointment.amount);
+    const amount = isNaN(rawAmount) ? '$0.00' : `$${rawAmount.toFixed(2)}`;
+
+    return (
+      <div
+        key={appointment._id || `${index}-fallback-key`}
+        className="grid grid-cols-1 sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] gap-4 items-center p-6 border-b bg-white shadow-sm hover:shadow-lg transition-all duration-200"
+      >
+        <div className="hidden sm:block text-gray-500 font-semibold">{index + 1}</div>
+        <div>
+          <p className="font-medium text-gray-900">{user?.name || 'Unknown'}</p>
+          <p className="sm:hidden text-xs text-gray-500">
+            Age: {user?.dob ? calculateAge(user.dob) : 'N/A'}
+          </p>
+        </div>
+        <div className="hidden sm:block text-sm text-gray-600">
+          {user?.dob ? calculateAge(user.dob) : 'N/A'}
+        </div>
+        <div className="text-gray-600">
+          <p className="font-medium">{slotDate}</p>
+          <p className="text-xs text-gray-500">{slotTime}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <img
+            className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm hidden sm:block"
+            src={doctor?.image || '/default-doctor.png'}
+            alt={doctor?.name || 'Doctor'}
+            loading="lazy"
+            onError={(e) => (e.target.src = '/default-doctor.png')}
+          />
+          <div>
+            <p className="font-medium text-gray-900">{doctor?.name || 'Unknown Doctor'}</p>
+            <p className="text-xs text-gray-500">{doctor?.speciality || 'Speciality Unknown'}</p>
+          </div>
+        </div>
+        <div className="font-medium text-gray-900">{amount}</div>
+        <StatusBadge status={status} />
+      </div>
+    );
+  };
+
+  // Render main component UI
   return (
     <div className="px-6 sm:px-8 py-8">
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="px-6 py-4 border-b bg-gray-50">
-          <h2 className="text-2xl font-semibold text-gray-900">All Appointments ({appointments.length})</h2>
+          <h2 className="text-2xl font-semibold text-gray-900">
+            All Appointments ({appointments.length})
+          </h2>
         </div>
 
         {loading && !hasFetchedOnce ? (
