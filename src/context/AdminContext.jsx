@@ -57,21 +57,27 @@ const AdminContextProvider = ({ children }) => {
       toast.error(error.message);
     }
   };
-
   const getAllAppointment = useCallback(async () => {
-  try {
-    const { data } = await axios.get(`${backendUrl}/admin/appointment-list`, {
-      headers: { aToken },
-    });
-    if (data.success) {
-      setAppointment(data.appointment);
-    } else {
-      toast.error(data.message);
+    try {
+      const { data } = await axios.get(`${backendUrl}/admin/appointment-list`, {
+        headers: { aToken },
+      });
+
+      if (!data) {
+        throw new Error("No data received from server");
+      }
+
+      if (data.success) {
+        return data.appointment;
+      } else {
+        toast.error(data.message);
+        return [];
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message || "Failed to fetch appointments");
+      return [];
     }
-  } catch (error) {
-    toast.error(error.message);
-  }
-  }, [aToken, backendUrl]); // 👈 dependency list
+  }, [aToken, backendUrl]);
 
   const getDashboardStats = async () => {
     try {
