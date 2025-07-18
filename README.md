@@ -52,7 +52,12 @@ admin-panel/
 Create a `.env` file in the root with:
 ```
 VITE_BACKEND_URL=<your-backend-url>
+VITE_FRONTEND_URL=<your-frontend-url>
 ```
+
+**Required for Vercel Deployment:**
+- `VITE_BACKEND_URL`: Your backend API URL (e.g., `https://your-backend.vercel.app/api`)
+- `VITE_FRONTEND_URL`: Your main frontend URL (e.g., `https://prescripto-frontend.vercel.app`)
 
 ## Deployment
 - Build for production:

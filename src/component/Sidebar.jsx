@@ -9,7 +9,11 @@ const Sidebar = () => {
   const handleLogout = () => {
     adminLogout();
     // Redirect to main website home page
-    const frontendUrl = import.meta.env.VITE_FRONTEND_URL || "https://prescripto-frontend.vercel.app";
+    const frontendUrl = import.meta.env.VITE_FRONTEND_URL;
+    if (!frontendUrl) {
+      console.error("Frontend URL not configured. Please set VITE_FRONTEND_URL environment variable.");
+      return;
+    }
     window.location.href = frontendUrl;
   };
 

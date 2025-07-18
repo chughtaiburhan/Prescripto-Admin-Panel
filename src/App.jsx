@@ -27,8 +27,12 @@ const App = () => {
 
   // If no token, redirect to main website login
   if (!aToken) {
-    // Use environment variable or fallback to production URL
-    const frontendUrl = import.meta.env.VITE_FRONTEND_URL || "https://prescripto-frontend.vercel.app";
+    // Use environment variable for frontend URL
+    const frontendUrl = import.meta.env.VITE_FRONTEND_URL;
+    if (!frontendUrl) {
+      console.error("Frontend URL not configured. Please set VITE_FRONTEND_URL environment variable.");
+      return null;
+    }
     window.location.href = `${frontendUrl}/login`;
     return null;
   }
