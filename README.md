@@ -1,12 +1,76 @@
-# React + Vite
+# Prescripto Admin Panel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+This is the admin panel for the Prescripto platform. It allows administrators to manage doctors, appointments, and users, as well as monitor platform statistics and perform administrative actions.
 
-Currently, two official plugins are available:
+## Features
+- Admin authentication
+- Doctor management (add, edit, delete)
+- Appointment management
+- User management
+- Dashboard with statistics
+- Image and availability management
+- Responsive UI
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Folder Structure
+```
+admin-panel/
+├── public/                # Static assets
+├── src/
+│   ├── assets/            # Images, icons, and static JS assets
+│   ├── component/         # Reusable React components
+│   ├── pages/             # Page-level React components (Admin)
+│   ├── context/           # React context providers
+│   ├── utils/             # Utility functions
+│   ├── index.css          # Global styles
+│   └── main.jsx           # App entry point
+├── package.json           # Project metadata and dependencies
+├── vite.config.js         # Vite configuration
+└── README.md              # Project documentation
+```
 
-## Expanding the ESLint configuration
+## How to Run
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+3. The app will be available at `http://localhost:5173` by default.
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech Stack
+- React
+- Vite
+- Tailwind CSS
+- Axios
+- React Router
+- React Toastify
+
+## Environment Variables
+Create a `.env` file in the root with:
+```
+VITE_BACKEND_URL=<your-backend-url>
+```
+
+## Deployment
+- Build for production:
+  ```bash
+  npm run build
+  ```
+- Deploy the `dist/` folder to your preferred static hosting (Vercel, Netlify, etc.)
+
+## How to Contribute
+1. Fork the repo
+2. Create a new branch (`git checkout -b feature/your-feature`)
+3. Commit your changes
+4. Push to your fork and open a Pull Request
+
+## Contact
+For questions or support, open an issue or contact the maintainer.
+
+---
+
+### GitHub Short Description
+> Admin panel for Prescripto: manage doctors, appointments, users, and platform statistics.

@@ -23,50 +23,56 @@ const AddDoctor = () => {
     e.preventDefault();
 
     try {
-      if (!doctorImage) {
-        return toast.error("Doctor image is required!");
+      // Only append image if present
+      if (doctorImage) {
+        const formData = new FormData();
+        formData.append("image", doctorImage);
+        formData.append("name", doctorName);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("experience", experience);
+        formData.append("fees", fees);
+        formData.append("speciality", speciality);
+        formData.append("degree", degree);
+        // Send address as plain string
+        formData.append("address", `${addressLine1}, ${addressLine2}`);
+        formData.append("about", about);
+
+        console.log("Sending form data to backend...");
+        console.log("Token:", aToken);
+
+        const { data } = await axios.post(
+          `${backendUrl}/api/admin/add-doctor`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${aToken}`,
+              "Content-Type": "multipart/form-data"
+            },
+          }
+        );
+
+        console.info("This is frontend Data : ", data);
+        toast.success(data.message || "Doctor added successfully!");
+
+        // Reset form after successful submit
+        setDoctorImage(null);
+        setDoctorName("");
+        setEmail("");
+        setPassword("");
+        setExperience("");
+        setFees("");
+        setSpeciality("");
+        setDegree("");
+        setAddressLine1("");
+        setAddressLine2("");
+        setAbout("");
+      } else {
+        toast.error("Doctor image is required!");
       }
-
-      const formData = new FormData();
-      formData.append("image", doctorImage);
-      formData.append("name", doctorName);
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("experience", experience);
-      formData.append("fees", fees);
-      formData.append("speciality", speciality);
-      formData.append("degree", degree);
-      formData.append(
-        "address",
-        JSON.stringify(`${addressLine1}, ${addressLine2}`)
-      );
-      formData.append("about", about);
-
-      const { data } = await axios.post(
-        `${backendUrl}/admin/add-doctor`,
-        formData,
-        {
-          headers: { aToken },
-        }
-      );
-
-      console.info("This is frontend Data : ", data);
-      toast.success(data.message || "Doctor added successfully!");
-
-      // Reset form after successful submit
-      setDoctorImage(null);
-      setDoctorName("");
-      setEmail("");
-      setPassword("");
-      setExperience("");
-      setFees("");
-      setSpeciality("");
-      setDegree("");
-      setAddressLine1("");
-      setAddressLine2("");
-      setAbout("");
     } catch (error) {
       console.error("Submit Error:", error);
+      console.error("Error response:", error.response?.data);
       const msg =
         error.response?.data?.message || "Server error! Please try again.";
       toast.error(msg);
@@ -76,18 +82,13 @@ const AddDoctor = () => {
   return (
     <form className="p-6 md:p-10 w-full" onSubmit={onSubmitHandler}>
       <h2 className="text-3xl font-bold mb-8 text-gray-800">Add New Doctor</h2>
-
       <div className="bg-white px-6 py-8 border rounded-xl shadow-lg w-full max-w-5xl max-h-[85vh] overflow-y-auto space-y-10">
         {/* Image Upload */}
         <div className="flex items-center gap-6">
           <label htmlFor="doc-img" className="cursor-pointer">
             <img
               className="w-24 h-24 object-cover bg-gray-100 rounded-full border-2 hover:shadow-lg transition"
-              src={
-                doctorImage
-                  ? URL.createObjectURL(doctorImage)
-                  : assets.upload_icon
-              }
+              src={doctorImage ? URL.createObjectURL(doctorImage) : assets.upload_icon}
               alt="Upload Doctor"
             />
           </label>
@@ -106,7 +107,6 @@ const AddDoctor = () => {
             </p>
           </div>
         </div>
-
         {/* Form Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Column 1 */}
@@ -124,7 +124,6 @@ const AddDoctor = () => {
                 required
               />
             </div>
-
             <div>
               <label className="text-sm font-medium text-gray-700">Email</label>
               <input
@@ -136,7 +135,6 @@ const AddDoctor = () => {
                 required
               />
             </div>
-
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Password
@@ -150,7 +148,6 @@ const AddDoctor = () => {
                 required
               />
             </div>
-
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Experience
@@ -169,7 +166,6 @@ const AddDoctor = () => {
                 ))}
               </select>
             </div>
-
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Fees (in PKR)
@@ -184,7 +180,6 @@ const AddDoctor = () => {
               />
             </div>
           </div>
-
           {/* Column 2 */}
           <div className="flex flex-col gap-5">
             <div>
@@ -207,7 +202,6 @@ const AddDoctor = () => {
                 <option>Gastroenterologist</option>
               </select>
             </div>
-
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Degree / Education
@@ -221,7 +215,6 @@ const AddDoctor = () => {
                 required
               />
             </div>
-
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Address
@@ -244,7 +237,6 @@ const AddDoctor = () => {
             </div>
           </div>
         </div>
-
         {/* About Doctor */}
         <div>
           <label className="text-sm font-medium text-gray-700 mb-2 block">
@@ -259,12 +251,11 @@ const AddDoctor = () => {
             required
           />
         </div>
-
         {/* Submit */}
         <div className="text-right">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-8 py-2.5 rounded-lg hover:bg-blue-700 transition font-medium shadow-md"
+            className="cursor-pointer transform transition-transform duration-200 active:scale-95 hover:shadow-2xl bg-blue-600 text-white px-8 py-2.5 rounded-lg hover:bg-blue-700 transition font-medium shadow-md"
           >
             Add Doctor
           </button>

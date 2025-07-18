@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AdminContext } from "../../context/AdminContext";
 import Skeleton from "react-loading-skeleton";
+import { assets } from '../../assets/assets_frontend/assets';
 
 // Status Badge Component
 const StatusBadge = ({ status }) => {
@@ -13,9 +14,8 @@ const StatusBadge = ({ status }) => {
   const validStatus = status && statusStyles[status] ? status : 'upcoming';
 
   return (
-    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-      statusStyles[validStatus] || 'bg-gray-100 text-gray-800'
-    }`}>
+    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${statusStyles[validStatus] || 'bg-gray-100 text-gray-800'
+      }`}>
       {validStatus.charAt(0).toUpperCase() + validStatus.slice(1)}
     </span>
   );
@@ -89,8 +89,8 @@ const AllAppointment = () => {
     const status = appointment.cancelled
       ? 'cancelled'
       : appointment.isCompleted
-      ? 'completed'
-      : 'upcoming';
+        ? 'completed'
+        : 'upcoming';
 
     const slotDate = appointment.slotDate || 'Date Not Available';
     const slotTime = appointment.slotTime || 'Time Not Available';
@@ -103,12 +103,12 @@ const AllAppointment = () => {
         key={appointment._id || `${index}-fallback-key`}
         className="grid grid-cols-1 sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] gap-4 items-center p-6 border-b bg-white shadow-sm hover:shadow-lg transition-all duration-200"
       >
-        <div className="hidden sm:block text-gray-500 font-semibold">{index + 1}</div> 
+        <div className="hidden sm:block text-gray-500 font-semibold">{index + 1}</div>
         <div>
           <p className="font-medium text-gray-900">{user?.name || 'Unknown'}</p>
-           <p className="text-sm text-gray-600">{user?.email || 'No email'}</p>
+          <p className="text-sm text-gray-600">{user?.email || 'No email'}</p>
         </div>
-        
+
         <div className="hidden sm:block text-sm text-gray-600">
           {user?.dob ? calculateAge(user.dob) : 'N/A'}
         </div>
@@ -119,10 +119,12 @@ const AllAppointment = () => {
         <div className="flex items-center gap-3">
           <img
             className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm hidden sm:block"
-            src={doctor?.image || '/default-doctor.png'}
+            src={doctor?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(doctor?.name || "Doctor")}&background=5f6FFF&color=fff&size=48&rounded=true&bold=true`}
             alt={doctor?.name || 'Doctor'}
             loading="lazy"
-            onError={(e) => (e.target.src = '/default-doctor.png')}
+            onError={(e) => {
+              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(doctor?.name || "Doctor")}&background=5f6FFF&color=fff&size=48&rounded=true&bold=true`;
+            }}
           />
           <div>
             <p className="font-medium text-gray-900">{doctor?.name || 'Unknown Doctor'}</p>
@@ -137,17 +139,24 @@ const AllAppointment = () => {
 
   // Render main component UI
   return (
-    <div className="px-6 sm:px-8 py-8">
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="px-6 py-4 border-b bg-gray-50">
-          <h2 className="text-2xl font-semibold text-gray-900">
-            All Appointments ({appointments.length})
+    <div className="relative px-6 sm:px-8 py-8 min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
+      {/* 3D Medical Animated Background */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <img src={assets.appointment_img} alt="appointment-bg" className="absolute top-0 left-0 w-1/2 opacity-10 blur-lg animate-pulse" />
+        <img src={assets.group_profiles} alt="group-bg" className="absolute bottom-0 right-0 w-1/3 opacity-10 blur-md animate-bounce" />
+        <img src={assets.Dermatologist} alt="derm-bg" className="absolute top-1/3 left-1/4 w-32 opacity-10 animate-spin-slow" />
+        <img src={assets.Pediatricians} alt="ped-bg" className="absolute bottom-10 left-1/3 w-24 opacity-10 animate-bounce" />
+      </div>
+      <div className="bg-white/90 rounded-3xl shadow-2xl overflow-hidden border border-blue-100 backdrop-blur-md">
+        <div className="px-8 py-6 border-b bg-gradient-to-r from-blue-100 via-white to-purple-100 flex items-center justify-between">
+          <h2 className="text-3xl font-extrabold text-blue-900 tracking-tight drop-shadow-lg flex items-center gap-3">
+            <svg className="w-8 h-8 text-blue-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            All Appointments <span className="ml-2 text-lg font-semibold text-blue-500">({appointments.length})</span>
           </h2>
         </div>
-
         {loading && !hasFetchedOnce ? (
           Array.from({ length: 5 }).map((_, index) => (
-            <div key={index} className="p-4 border-b bg-gray-50">
+            <div key={index} className="p-4 border-b bg-gradient-to-r from-blue-50 via-white to-purple-50">
               {renderSkeletonRow()}
             </div>
           ))
@@ -156,8 +165,8 @@ const AllAppointment = () => {
             {error} - Please try again later.
           </div>
         ) : appointments.length > 0 ? (
-          <div className="divide-y bg-gray-50">
-            <div className="hidden sm:grid grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] gap-4 p-4 bg-gray-200 text-sm font-medium text-gray-600">
+          <div className="divide-y bg-gradient-to-r from-blue-50 via-white to-purple-50">
+            <div className="hidden sm:grid grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] gap-4 p-4 bg-blue-100/60 text-sm font-bold text-blue-700 rounded-t-2xl shadow">
               <div>#</div>
               <div>Patient</div>
               <div>Age</div>
@@ -169,7 +178,10 @@ const AllAppointment = () => {
             {appointments.map(renderAppointmentRow)}
           </div>
         ) : (
-          <div className="p-6 text-center text-gray-500">No appointments found.</div>
+          <div className="p-8 text-center text-blue-400 flex flex-col items-center gap-4">
+            <img src={assets.appointment_img} alt="no-appointments" className="w-32 opacity-30 animate-pulse" />
+            <span className="text-xl font-semibold">No appointments found.</span>
+          </div>
         )}
       </div>
     </div>
