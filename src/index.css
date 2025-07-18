@@ -12,9 +12,9 @@ body {
   width: 100%;
 }
 
-::-webkit-scrollbar{
-  @apply hidden
-} 
-.input-style{
-  @apply w-full border rounded px-4 py-2 focus:outline-none
+::-webkit-scrollbar {
+  @apply hidden;
+}
+.input-style {
+  @apply w-full border rounded px-4 py-2 focus:outline-none;
 }

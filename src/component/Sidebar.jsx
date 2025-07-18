@@ -9,7 +9,8 @@ const Sidebar = () => {
   const handleLogout = () => {
     adminLogout();
     // Redirect to main website home page
-    window.location.href = 'http://localhost:5173'; // Frontend URL
+    const frontendUrl = import.meta.env.VITE_FRONTEND_URL || "https://prescripto-frontend.vercel.app";
+    window.location.href = frontendUrl;
   };
 
   return (

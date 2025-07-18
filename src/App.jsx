@@ -27,7 +27,9 @@ const App = () => {
 
   // If no token, redirect to main website login
   if (!aToken) {
-    window.location.href = "http://localhost:5173/login";
+    // Use environment variable or fallback to production URL
+    const frontendUrl = import.meta.env.VITE_FRONTEND_URL || "https://prescripto-frontend.vercel.app";
+    window.location.href = `${frontendUrl}/login`;
     return null;
   }
 
