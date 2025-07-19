@@ -9,6 +9,7 @@ import Dashboard from "./pages/Admin/Dashboard";
 import AllAppointment from "./pages/Admin/AllAppointment";
 import AddDoctor from "./pages/Admin/AddDoctor";
 import DoctorList from "./pages/Admin/DoctorList";
+import Login from "./pages/Login";
 
 const App = () => {
   const { aToken, setAToken } = useContext(AdminContext);
@@ -25,7 +26,7 @@ const App = () => {
     }
   }, [setAToken]);
 
-  // If no token, redirect to main website login
+  // If no token, show login page
   if (!aToken) {
     // Check if user just verified email and is a doctor
     const adminToken = localStorage.getItem("adminToken");
@@ -37,10 +38,16 @@ const App = () => {
       return null; // Let the component render
     }
 
-    // Use environment variable for frontend URL with fallback
-    const frontendUrl = import.meta.env.VITE_FRONTEND_URL || "https://prescripto-frontend-ten.vercel.app";
-    window.location.href = `${frontendUrl}/login`;
-    return null;
+    // Show login page instead of redirecting
+    return (
+      <div className="bg-[#F8F9FD]">
+        <ToastContainer />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Login />} />
+        </Routes>
+      </div>
+    );
   }
 
   return (
