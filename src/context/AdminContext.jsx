@@ -14,7 +14,7 @@ const AdminContextProvider = ({ children }) => {
     totalAppointments: 0,
   });
   const [loading, setLoading] = useState(false);
-  const backendUrl = "https://prescripto-backend-nextjs.vercel.app/api";
+  const backendUrl = "https://prescripto-backend-beta-nine.vercel.app";
 
   const calculateAge = (dob) => {
     if (!dob) return "N/A";
