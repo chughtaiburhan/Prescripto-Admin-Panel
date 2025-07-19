@@ -27,6 +27,16 @@ const App = () => {
 
   // If no token, redirect to main website login
   if (!aToken) {
+    // Check if user just verified email and is a doctor
+    const adminToken = localStorage.getItem("adminToken");
+    const adminRole = localStorage.getItem("adminRole");
+
+    if (adminToken && adminRole === "doctor") {
+      // User just verified email as doctor, set the token
+      setAToken(adminToken);
+      return null; // Let the component render
+    }
+
     // Use environment variable for frontend URL with fallback
     const frontendUrl = import.meta.env.VITE_FRONTEND_URL || "https://prescripto-frontend-ten.vercel.app";
     window.location.href = `${frontendUrl}/login`;
